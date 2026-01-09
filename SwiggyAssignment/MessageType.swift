@@ -1,0 +1,36 @@
+//
+//  MessageType.swift
+//  SwiggyAssignment
+//
+//  Created by Ayush Goyal on 10/01/26.
+//
+
+import Foundation
+
+enum MessageType: String, Codable {
+    case text
+    case file
+}
+
+enum Sender: String, Codable {
+    case user
+    case agent
+}
+
+struct Message: Identifiable, Codable {
+    let id: String
+    let message: String
+    let type: MessageType
+    let sender: Sender
+    let timestamp: Int64
+    
+    var date: Date {
+        Date(timeIntervalSince1970: TimeInterval(timestamp) / 1000.0)
+    }
+    
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}

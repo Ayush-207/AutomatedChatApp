@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct SwiggyAssignmentApp: App {
+struct SwiggyChatApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }
