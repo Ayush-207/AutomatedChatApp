@@ -17,10 +17,21 @@ enum Sender: String, Codable {
     case agent
 }
 
+struct FileInfo: Codable {
+    let path: String
+    let fileSize: Int64
+    let thumbnail: Thumbnail?
+}
+
+struct Thumbnail: Codable {
+    let path: String
+}
+
 struct Message: Identifiable, Codable {
     let id: String
     let message: String
     let type: MessageType
+    let file: FileInfo?
     let sender: Sender
     let timestamp: Int64
     

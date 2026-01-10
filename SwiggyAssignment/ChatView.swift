@@ -38,8 +38,7 @@ final class KeyboardObserver: ObservableObject {
 
 struct ChatView: View {
     @StateObject private var viewModel = ChatViewModel()
-    @StateObject private var keyboard = KeyboardObserver()
-    @FocusState private var isFocused: Bool
+    @FocusState private var isInputFocused: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -47,14 +46,17 @@ struct ChatView: View {
                 ScrollView {
                     LazyVStack(spacing: 8) {
                         ForEach(viewModel.messages) { message in
-                            MessageBubbleView(message: message)
-                                .id(message.id)
+                            MessageBubbleView(message: message) { imagePath in
+                                viewModel.selectedImageForFullScreen = imagePath
+                            }
+                            .id(message.id)
                         }
                     }
                     .padding(.vertical)
                 }
+                .contentShape(Rectangle())
                 .onTapGesture {
-                    toggleKeyboard()
+                    hideKeyboard()
                 }
                 .onChange(of: viewModel.messages.count) { _, _ in
                     scrollToBottom(proxy: proxy)
@@ -62,19 +64,23 @@ struct ChatView: View {
                 .onAppear {
                     scrollToBottom(proxy: proxy)
                 }
-                Divider()
-                MessageInputView(
-                    viewModel: viewModel,
-                    focusedState: $isFocused
-                )
             }
+            
+            Divider()
+            
+            MessageInputView(viewModel: viewModel)
         }
         .navigationTitle("Chat")
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(item: Binding(
+            get: { viewModel.selectedImageForFullScreen.map { ImageWrapper(path: $0) } },
+            set: { viewModel.selectedImageForFullScreen = $0?.path }
+        )) { wrapper in
+            FullScreenImageView(imagePath: wrapper.path)
+        }
     }
     
     private func scrollToBottom(proxy: ScrollViewProxy) {
-        print("LOGS:: \(#function)")
         if let lastMessage = viewModel.messages.last {
             withAnimation {
                 proxy.scrollTo(lastMessage.id, anchor: .bottom)
@@ -82,12 +88,18 @@ struct ChatView: View {
         }
     }
     
-    private func toggleKeyboard() {
-        print("LOGS:: \(#function)")
-        if keyboard.isKeyboardVisible {
-           isFocused = false
-        } else {
-            isFocused = true
-        }
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+struct ImageWrapper: Identifiable {
+    let id = UUID()
+    let path: String
+}
+
+#Preview {
+    NavigationStack {
+        ChatView()
     }
 }
