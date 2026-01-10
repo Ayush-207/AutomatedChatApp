@@ -64,7 +64,7 @@ struct SeedData {
             file: FileInfo(
                 path: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
                 fileSize: 245680,
-                thumbnail: Thumbnail(path: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=100")
+                thumbnail: Thumbnail(path: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400")
             ),
             sender: .user,
             timestamp: 1703520300000
