@@ -23,7 +23,7 @@ struct MessageBubbleView: View {
                     VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 8) {
                         SwiggyChatImageView(originalPath: fileInfo.path, thumbnailPath: fileInfo.thumbnail?.path)
                         .scaledToFill()
-                        .frame(maxWidth: 250, maxHeight: 300)
+                        .frame(width: 250, height: 300)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
                             onImageTap(fileInfo.path)
@@ -45,7 +45,7 @@ struct MessageBubbleView: View {
                                 }
                         }
                     }
-                    .frame(maxWidth: 250)
+                    .frame(width: 250)
                     .padding(8)
                     .background(message.sender == .user ? Color.blue.opacity(0.1) : Color(.systemGray6))
                     .cornerRadius(16)
@@ -78,10 +78,6 @@ struct MessageBubbleView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 2)
-        .transition(.asymmetric(
-            insertion: .scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)),
-            removal: .opacity
-        ))
         .alert("Copied", isPresented: $showCopyAlert) {
             Button("OK", role: .cancel) { }
         } message: {

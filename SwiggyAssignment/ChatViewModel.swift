@@ -82,14 +82,14 @@ class ChatViewModel: ObservableObject {
         
         if let result = imageService.saveImage(image) {
             
-            let thumbnailInfo = result.thumbnailURL.map { Thumbnail(path: $0.absoluteString) }
+            let thumbnailInfo = result.thumbnailURL.map { Thumbnail(path: $0) }
             
             let newMessage = Message(
                 id: UUID().uuidString,
                 message: inputText.isEmpty ? "" : inputText,
                 type: .file,
                 file: FileInfo(
-                    path: result.originalURL.absoluteString,
+                    path: result.originalURL,
                     fileSize: result.fileSize,
                     thumbnail: thumbnailInfo
                 ),

@@ -54,13 +54,9 @@ struct ChatScreenView: View {
     var body: some View {
         VStack(spacing: 0) {
             ChatView(viewModel: viewModel)
-
             Divider()
-            
             MessageInputView(viewModel: viewModel, isTextFieldFocused: $isInputFocused)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
         }
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: viewModel.displayedMessages.count)
         .navigationTitle("Chat")
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(item: Binding(
@@ -112,13 +108,14 @@ struct ChatView: View {
                 scrollToBottom(proxy: proxy)
             }
             .onAppear {
+                print("LOGS:: onAppear")
                 scrollToBottom(proxy: proxy, animated: false)
             }
         }
     }
     
     private func scrollToBottom(proxy: ScrollViewProxy, animated: Bool = true, withDuration duration: CGFloat = 0.3) {
-        print("LOGS:: \(#function)")
+        print("LOGS:: \(#function), bottomID: \(viewModel.displayedMessages.last?.id), scrollToBottom: \(viewModel.scrollToBottom)")
         guard let bottomID = viewModel.displayedMessages.last?.id,
         viewModel.scrollToBottom else { return }
         if animated {

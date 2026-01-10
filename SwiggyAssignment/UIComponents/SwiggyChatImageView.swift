@@ -32,7 +32,8 @@ struct SwiggyChatImageView: View {
         isLoading = true
 
         if let thumb = thumbnailPath {
-            ImageService.shared.loadImage(from: thumb) { loaded in
+//            print("LOGS:: thumbnailPath \(thumb)")
+            ImageService.shared.loadImage(from: thumb, isThumbnail: true) { loaded in
                 if let loaded = loaded {
                     self.image = loaded
                 } else {
@@ -50,7 +51,7 @@ struct SwiggyChatImageView: View {
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: 12)
             .fill(Color.gray.opacity(0.3))
-            .frame(width: 200, height: 200)
+            .frame(width: 250, height: 300)
             .overlay(
                 Image(systemName: "photo")
                     .font(.largeTitle)

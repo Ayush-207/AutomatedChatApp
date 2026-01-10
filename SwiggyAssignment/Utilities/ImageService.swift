@@ -15,8 +15,8 @@ final class ImageService {
     }
 
     struct StoredImage {
-        let originalURL: URL
-        let thumbnailURL: URL?
+        let originalURL: String
+        let thumbnailURL: String?
         let fileSize: Int64
     }
 
@@ -36,13 +36,13 @@ final class ImageService {
             for: .documentDirectory,
             in: .userDomainMask
         )[0]
-
+        
         let originalURL = documentsURL.appendingPathComponent(filename)
 
         do {
             try data.write(to: originalURL)
 
-            let thumbnailURL = generateThumbnail(
+            let thumbnailFileName = generateThumbnail(
                 from: image,
                 maxSize: thumbnailMaxSize
             )
@@ -50,8 +50,8 @@ final class ImageService {
             let fileSize = Int64(data.count)
 
             return StoredImage(
-                originalURL: originalURL,
-                thumbnailURL: thumbnailURL,
+                originalURL: filename,
+                thumbnailURL: thumbnailFileName,
                 fileSize: fileSize
             )
         } catch {
@@ -63,7 +63,7 @@ final class ImageService {
     private func generateThumbnail(
         from image: UIImage,
         maxSize: CGFloat
-    ) -> URL? {
+    ) -> String? {
 
         let maxDimension = max(image.size.width, image.size.height)
 
@@ -83,7 +83,7 @@ final class ImageService {
         UIGraphicsEndImageContext()
 
         guard let thumbnail = thumbnailImage,
-              let data = thumbnail.jpegData(compressionQuality: 0.5)
+              let data = thumbnail.jpegData(compressionQuality: 0.8)
         else { return nil }
 
         let filename = "thumb_\(UUID().uuidString).jpg"
@@ -97,52 +97,65 @@ final class ImageService {
 
         do {
             try data.write(to: fileURL)
-            return fileURL
+            return filename
         } catch {
             print("Thumbnail save failed:", error)
             return nil
         }
     }
 
-    func loadImage(from path: String, completion: @escaping (UIImage?) -> Void) {
+    func loadImage(
+        from path: String,
+        isThumbnail: Bool = false,
+        completion: @escaping (UIImage?) -> Void) {
         let cacheKey = path as NSString
-
+//        print("LOGS:: \(#function), forPath: \(path)")
         if let cached = memoryCache.object(forKey: cacheKey) {
+//            print("LOGS:: \(#function), image in cache")
             completion(cached)
             return
         }
 
         guard let url = URL(string: path) else {
+//            print("LOGS:: \(#function), invalid path")
             completion(nil)
             return
         }
 
         if url.scheme == "http" || url.scheme == "https" {
+//            print("LOGS:: \(#function), remote URL type")
             Task {
                 do {
                     let (data, _) = try await URLSession.shared.data(from: url)
+//                    print("LOGS:: \(#function), img downloaded")
                     if let img = UIImage(data: data) {
+//                        print("LOGS:: \(#function), img downloaded: success")
                         memoryCache.setObject(img, forKey: cacheKey)
                         DispatchQueue.main.async { completion(img) }
                     } else {
+//                        print("LOGS:: \(#function), img downloaded: fail")
                         DispatchQueue.main.async { completion(nil) }
                     }
                 } catch {
+//                    print("LOGS:: \(#function), img fail")
                     DispatchQueue.main.async { completion(nil) }
                 }
             }
-        } else if url.isFileURL {
+        } else {
+            let dirURL = FileManager.default.urls(for: isThumbnail ? .cachesDirectory : .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = dirURL.appendingPathComponent(path)
+//            print("LOGS:: \(#function), file type URL")
             DispatchQueue.global(qos: .userInitiated).async {
-                guard let data = try? Data(contentsOf: url),
+                guard let data = try? Data(contentsOf: fileURL),
                       let img = UIImage(data: data) else {
+//                    print("LOGS:: \(#function), image read fail")
                     DispatchQueue.main.async { completion(nil) }
                     return
                 }
+//                print("LOGS:: \(#function), image read success")
                 self.memoryCache.setObject(img, forKey: cacheKey)
                 DispatchQueue.main.async { completion(img) }
             }
-        } else {
-            completion(nil)
         }
     }
     
