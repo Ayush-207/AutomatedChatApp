@@ -10,6 +10,8 @@ import Combine
 
 final class KeyboardObserver: ObservableObject {
     @Published var isKeyboardVisible: Bool = false
+    @Published var keyboardHeight: CGFloat = 0
+    @Published var duration: CGFloat = 0
     private var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -17,9 +19,17 @@ final class KeyboardObserver: ObservableObject {
             forName: UIResponder.keyboardWillShowNotification,
             object: nil,
             queue: .main
-        ) { [weak self] _ in
+        ) { [weak self] notification in
             guard let self = self else { return }
             isKeyboardVisible = true
+            
+            if let height = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                keyboardHeight = height.height
+            }
+            
+            if let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? CGFloat {
+                duration = animationDuration
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -28,6 +38,7 @@ final class KeyboardObserver: ObservableObject {
             queue: .main
         ) { [weak self] _ in
             self?.isKeyboardVisible = false
+            self?.keyboardHeight = 0
         }
     }
     
@@ -36,40 +47,20 @@ final class KeyboardObserver: ObservableObject {
     }
 }
 
-struct ChatView: View {
+struct ChatScreenView: View {
     @StateObject private var viewModel = ChatViewModel()
     @FocusState private var isInputFocused: Bool
-    
+        
     var body: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        ForEach(viewModel.messages) { message in
-                            MessageBubbleView(message: message) { imagePath in
-                                viewModel.selectedImageForFullScreen = imagePath
-                            }
-                            .id(message.id)
-                        }
-                    }
-                    .padding(.vertical)
-                }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    hideKeyboard()
-                }
-                .onChange(of: viewModel.messages.count) { _, _ in
-                    scrollToBottom(proxy: proxy)
-                }
-                .onAppear {
-                    scrollToBottom(proxy: proxy)
-                }
-            }
-            
+            ChatView(viewModel: viewModel)
+
             Divider()
             
-            MessageInputView(viewModel: viewModel)
+            MessageInputView(viewModel: viewModel, isTextFieldFocused: $isInputFocused)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
         }
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: viewModel.displayedMessages.count)
         .navigationTitle("Chat")
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(item: Binding(
@@ -79,12 +70,63 @@ struct ChatView: View {
             FullScreenImageView(imagePath: wrapper.path)
         }
     }
+}
+
+struct ChatView: View {
+    @ObservedObject var viewModel: ChatViewModel
     
-    private func scrollToBottom(proxy: ScrollViewProxy) {
-        if let lastMessage = viewModel.messages.last {
-            withAnimation {
-                proxy.scrollTo(lastMessage.id, anchor: .bottom)
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                LazyVStack(spacing: 8) {
+                    if viewModel.hasMoreMessages {
+                        Button(action: {
+                            viewModel.loadMoreMessages()
+                        }) {
+                            if viewModel.isLoadingMore {
+                                ProgressView()
+                                    .padding()
+                            } else {
+                                Text("Load More")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                                    .padding()
+                            }
+                        }
+                    }
+                    
+                    ForEach(viewModel.displayedMessages) { message in
+                        MessageBubbleView(message: message) { imagePath in
+                            viewModel.selectedImageForFullScreen = imagePath
+                        }
+                        .id(message.id)
+                    }
+                }
+                .padding(.vertical)
             }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                hideKeyboard()
+            }
+            .onChange(of: viewModel.displayedMessages.count) { _, _ in
+                scrollToBottom(proxy: proxy)
+            }
+            .onAppear {
+                scrollToBottom(proxy: proxy, animated: false)
+            }
+        }
+    }
+    
+    private func scrollToBottom(proxy: ScrollViewProxy, animated: Bool = true, withDuration duration: CGFloat = 0.3) {
+        print("LOGS:: \(#function)")
+        guard let bottomID = viewModel.displayedMessages.last?.id,
+        viewModel.scrollToBottom else { return }
+        if animated {
+            withAnimation(.easeOut(duration: duration)) {
+                proxy.scrollTo(bottomID, anchor: .bottom)
+            }
+        } else {
+            proxy.scrollTo(bottomID, anchor: .bottom)
         }
     }
     
@@ -100,6 +142,13 @@ struct ImageWrapper: Identifiable {
 
 #Preview {
     NavigationStack {
-        ChatView()
+        ChatScreenView()
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

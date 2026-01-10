@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SwiggyChatApp: App {
@@ -13,5 +14,6 @@ struct SwiggyChatApp: App {
         WindowGroup {
             HomeView()
         }
+        .modelContainer(StorageService.shared.container)
     }
 }

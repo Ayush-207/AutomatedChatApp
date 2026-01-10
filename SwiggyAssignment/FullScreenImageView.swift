@@ -26,48 +26,16 @@ struct FullScreenImageView: View {
                             .padding()
                     }
                 }
-                
                 Spacer()
-                
-                if imagePath.hasPrefix("http") {
-                    AsyncImage(url: URL(string: imagePath)) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .scaleEffect(scale)
-                                .gesture(
-                                    buildMagnificationGesture()
-                                )
-                                .onTapGesture(count: 2) {
-                                    onDoubleTapGesture()
-                                }
-                        case .failure:
-                            Text("Failed to load image")
-                                .foregroundColor(.white)
-                        case .empty:
-                            ProgressView()
-                                .tint(.white)
-                        @unknown default:
-                            EmptyView()
-                        }
+                SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil)
+                    .scaledToFit()
+                    .scaleEffect(scale)
+                    .gesture(
+                        buildMagnificationGesture()
+                    )
+                    .onTapGesture(count: 2) {
+                        onDoubleTapGesture()
                     }
-                } else {
-                    if let image = ImageService.shared.loadImage(from: imagePath) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .scaleEffect(scale)
-                            .gesture(
-                                buildMagnificationGesture()
-                            )
-                            .onTapGesture(count: 2) {
-                                onDoubleTapGesture()
-                            }
-                    }
-                }
-                
                 Spacer()
             }
         }

@@ -40,8 +40,6 @@ struct Message: Identifiable, Codable {
     }
     
     var formattedTime: String {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+        date.smartFormatted()
     }
 }

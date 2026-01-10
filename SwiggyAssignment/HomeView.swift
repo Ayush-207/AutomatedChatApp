@@ -11,7 +11,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                NavigationLink(destination: ChatView()) {
+                NavigationLink(destination: ChatScreenView()) {
                     Text("Open Chat")
                         .font(.headline)
                         .foregroundColor(.white)

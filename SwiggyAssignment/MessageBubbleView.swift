@@ -10,6 +10,7 @@ import SwiftUI
 struct MessageBubbleView: View {
     let message: Message
     let onImageTap: (String) -> Void
+    @State private var showCopyAlert = false
     
     var body: some View {
         HStack {
@@ -20,49 +21,28 @@ struct MessageBubbleView: View {
             VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 4) {
                 if message.type == .file, let fileInfo = message.file {
                     VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 8) {
-                        if fileInfo.path.hasPrefix("http") {
-                            AsyncImage(url: URL(string: fileInfo.path)) { phase in
-                                switch phase {
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: 250, maxHeight: 300)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        .onTapGesture {
-                                            onImageTap(fileInfo.path)
-                                        }
-                                case .failure:
-                                    placeholderImage
-                                case .empty:
-                                    ProgressView()
-                                        .frame(width: 200, height: 200)
-                                @unknown default:
-                                    placeholderImage
-                                }
-                            }
-                        } else {
-                            if let image = ImageService.shared.loadImage(from: fileInfo.path) {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(maxWidth: 250, maxHeight: 300)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .onTapGesture {
-                                        onImageTap(fileInfo.path)
-                                    }
-                            } else {
-                                placeholderImage
-                            }
+                        SwiggyChatImageView(originalPath: fileInfo.path, thumbnailPath: fileInfo.thumbnail?.path)
+                        .scaledToFill()
+                        .frame(maxWidth: 250, maxHeight: 300)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .onTapGesture {
+                            onImageTap(fileInfo.path)
                         }
-                        
                         Text(ImageService.shared.formatFileSize(fileInfo.fileSize))
                             .font(.caption2)
                             .foregroundColor(.secondary)
                         
                         if !message.message.isEmpty {
                             Text(message.message)
-                                .padding(.vertical, 2)
+                                .padding(.vertical, 3)
+                                .contextMenu {
+                                    Button(action: {
+                                        UIPasteboard.general.string = message.message
+                                        showCopyAlert = true
+                                    }) {
+                                        Label("Copy Text", systemImage: "doc.on.doc")
+                                    }
+                                }
                         }
                     }
                     .frame(maxWidth: 250)
@@ -76,6 +56,14 @@ struct MessageBubbleView: View {
                         .background(message.sender == .user ? Color.blue : Color(.systemGray5))
                         .foregroundColor(message.sender == .user ? .white : .primary)
                         .cornerRadius(16)
+                        .contextMenu {
+                            Button(action: {
+                                UIPasteboard.general.string = message.message
+                                showCopyAlert = true
+                            }) {
+                                Label("Copy Text", systemImage: "doc.on.doc")
+                            }
+                        }
                 }
                 
                 Text(message.formattedTime)
@@ -90,6 +78,15 @@ struct MessageBubbleView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 2)
+        .transition(.asymmetric(
+            insertion: .scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)),
+            removal: .opacity
+        ))
+        .alert("Copied", isPresented: $showCopyAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Message copied to clipboard")
+        }
     }
     
     private var placeholderImage: some View {
@@ -101,5 +98,27 @@ struct MessageBubbleView: View {
                     .font(.largeTitle)
                     .foregroundColor(.gray)
             )
+    }
+}
+
+#Preview {
+    VStack {
+        MessageBubbleView(message: Message(
+            id: "1",
+            message: "Hello! How can I help you today?",
+            type: .text,
+            file: nil,
+            sender: .agent,
+            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
+        ), onImageTap: { _ in })
+        
+        MessageBubbleView(message: Message(
+            id: "2",
+            message: "I need help with my booking",
+            type: .text,
+            file: nil,
+            sender: .user,
+            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
+        ), onImageTap: { _ in })
     }
 }
