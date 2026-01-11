@@ -77,7 +77,8 @@ ViewModels/
 
 Views/
 ├── HomeView.swift         // Simple home navigation
-├── ChatView.swift         // Chat Page View
+├── ChatScreenView.swift   // Container with keyboard handling
+├── ChatView.swift         // Scrollable message list
 ├── MessageBubbleView.swift // Individual message rendering
 ├── MessageInputView.swift  // Input field & controls
 ├── FullScreenImageView.swift // Full-screen image viewer
@@ -92,8 +93,9 @@ Services/
 Utilities/
 └── Date+Extensions.swift  // Smart timestamp formatting
 └── SeedData.swift         // Initial mock messages
-🔧 Setup Instructions
-Prerequisites
+
+
+**Prerequisites**
 * Xcode 15.0 or later
 * iOS 17.0+ deployment target
 * Swift 5.9+
