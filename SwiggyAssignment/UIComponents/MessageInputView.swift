@@ -10,7 +10,7 @@ import Combine
 
 struct MessageInputView: View {
     @ObservedObject var viewModel: ChatViewModel
-    var isTextFieldFocused: FocusState<Bool>.Binding
+    @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -38,7 +38,7 @@ struct MessageInputView: View {
             
             HStack(spacing: 12) {
                 Button(action: {
-                    isTextFieldFocused.wrappedValue = false
+                    isTextFieldFocused = false
                     viewModel.showActionSheet = true
                 }) {
                     Image(systemName: "plus.circle.fill")
@@ -53,7 +53,7 @@ struct MessageInputView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(20)
                     .lineLimit(1...5)
-                    .focused(isTextFieldFocused)
+                    .focused($isTextFieldFocused)
                 
                 Button(action: {
                     if viewModel.selectedImage != nil {

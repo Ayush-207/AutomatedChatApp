@@ -27,13 +27,22 @@ struct MessageBubbleView: View {
                             fixedSize: .init(width: 250, height: 300),
                             imageScaling: .fill
                         )
+                        .overlay {
+                            ZStack(alignment: .bottomTrailing) {
+                                Color.black
+                                    .opacity(0.2)
+                                    .frame(width: 250, height: 300)
+                                Text(ImageService.shared.formatFileSize(fileInfo.fileSize))
+                                    .font(.system(size: 9, weight: .regular))
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 5)
+                                    .padding(.bottom, 5)
+                            }
+                        }
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
                             onImageTap(fileInfo.path)
                         }
-                        Text(ImageService.shared.formatFileSize(fileInfo.fileSize))
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
                         
                         if !message.message.isEmpty {
                             Text(message.message)
