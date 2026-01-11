@@ -95,8 +95,7 @@ ViewModels/
 
 Views/
 ├── HomeView.swift         // Simple home navigation
-├── ChatScreenView.swift   // Container with keyboard handling
-├── ChatView.swift         // Scrollable message list
+├── ChatView.swift         // Chat detail page
 ├── MessageBubbleView.swift // Individual message rendering
 ├── MessageInputView.swift  // Input field & controls
 ├── FullScreenImageView.swift // Full-screen image viewer
