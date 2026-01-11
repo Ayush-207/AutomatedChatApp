@@ -97,8 +97,11 @@ struct ChatView: View {
                         }
                         .id(message.id)
                     }
+                    if viewModel.isAgentTyping {
+                        TypingIndicatorView()
+                    }
                     Color.clear
-                        .frame(height: 1)
+                        .frame(maxWidth: .infinity, maxHeight: 1)
                         .id("BOTTOM")
                 }
                 .padding(.vertical)
@@ -110,8 +113,10 @@ struct ChatView: View {
             .onChange(of: viewModel.displayedMessages.count) { _, _ in
                 scrollToBottom(proxy: proxy)
             }
+            .onChange(of: viewModel.isAgentTyping)  { _, _ in
+                scrollToBottom(proxy: proxy)
+            }
             .onAppear {
-                print("LOGS:: onAppear")
                 scrollToBottom(proxy: proxy, animated: false)
             }
         }
@@ -121,8 +126,8 @@ struct ChatView: View {
         proxy: ScrollViewProxy,
         animated: Bool = true,
         withDuration duration: CGFloat = 0.3) {
-        print("LOGS:: \(#function), scrollToBottom: \(viewModel.scrollToBottom)")
         guard viewModel.scrollToBottom else { return }
+        viewModel.scrollToBottom = false
         if animated {
             withAnimation(.easeOut(duration: duration)) {
                 proxy.scrollTo("BOTTOM", anchor: .bottom)

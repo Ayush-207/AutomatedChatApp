@@ -86,7 +86,3 @@ struct MessageInputView: View {
         }
     }
 }
-
-#Preview {
-//    MessageInputView(viewModel: ChatViewModel())
-}

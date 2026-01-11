@@ -20,7 +20,7 @@ struct MessageBubbleView: View {
             
             VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 4) {
                 if message.type == .file, let fileInfo = message.file {
-                    VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 8) {
                         SwiggyChatImageView(
                             originalPath: fileInfo.path,
                             thumbnailPath: fileInfo.thumbnail?.path,

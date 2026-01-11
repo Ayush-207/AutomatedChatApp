@@ -18,7 +18,15 @@ class ChatViewModel: ObservableObject {
     @Published var showActionSheet = false
     @Published var selectedImageForFullScreen: String?
     @Published var isLoadingMore = false
+    @Published var isAgentTyping: Bool = false
     var scrollToBottom: Bool = false
+    
+    private let sampleMessages: [String] = [
+        "Great, will get that done for you!",
+        "Thank you for choosing me as your consierge",
+        "Can I help you out with anything else?",
+        "Thanks a lot, have a nice day!"
+    ]
     
     private let storage = StorageService.shared
     private let imageService = ImageService.shared
@@ -75,6 +83,7 @@ class ChatViewModel: ObservableObject {
         totalMessageCount += 1
         inputText = ""
         scrollToBottom = true
+        simulateAgentMessage()
     }
     
     func sendImageMessage() {
@@ -114,6 +123,32 @@ class ChatViewModel: ObservableObject {
     func openPhotoLibrary() {
         imageSourceType = .photoLibrary
         showImagePicker = true
+    }
+    
+    private func simulateAgentMessage() {
+        isAgentTyping = true
+        scrollToBottom = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) { [weak self] in
+            self?.isAgentTyping = false
+            self?.addRandomAgentMessage()
+        }
+    }
+    
+    private func addRandomAgentMessage() {
+        guard let randomMessage = sampleMessages.randomElement() else { return }
+        let newMessage = Message(
+            id: UUID().uuidString,
+            message: randomMessage,
+            type: .text,
+            file: nil,
+            sender: .agent,
+            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
+        )
+        
+        storage.saveMessage(newMessage)
+        displayedMessages.append(newMessage)
+        totalMessageCount += 1
+        scrollToBottom = true
     }
     
     var isMessageValid: Bool {
