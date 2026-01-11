@@ -40,6 +40,7 @@ struct MessageBubbleView: View {
                             }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
                             onImageTap(fileInfo.path)
                         }

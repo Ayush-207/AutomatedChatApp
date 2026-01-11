@@ -136,11 +136,6 @@ struct ChatView: View {
                     scrollToBottom(proxy: proxy)
                 }
                 .onChange(of: keyboard.height) { oldValue, newValue in
-                    print("LOGS:: keyboard height changed")
-                    print("LOGS:: bottomViewYOrigin: \(bottomViewYOrigin)")
-                    print("LOGS:: chatViewHeight: \(chatViewHeight)")
-                    print("LOGS:: keyboard.height: \(keyboard.height)")
-                    
                     if newValue > oldValue && (keyboard.height + chatViewHeight > bottomViewYOrigin) {
                         viewModel.scrollToBottom = true
                         scrollToBottom(proxy: proxy)

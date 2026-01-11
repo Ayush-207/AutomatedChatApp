@@ -9,6 +9,7 @@ import SwiftUI
 enum ChatImageScaling {
     case fit
     case fill
+    case none
 }
 
 struct SwiggyChatImageView: View {
@@ -45,6 +46,8 @@ struct SwiggyChatImageView: View {
             base.scaledToFill()
         case .fit:
             base.scaledToFit()
+        case .none:
+            base
         }
     }
 
@@ -53,19 +56,23 @@ struct SwiggyChatImageView: View {
         isLoading = true
 
         if let thumb = thumbnailPath {
-//            print("LOGS:: thumbnailPath \(thumb)")
             ImageService.shared.loadImage(from: thumb, isThumbnail: true) { loaded in
                 if let loaded = loaded {
+                    isLoading = false
                     self.image = loaded
                 } else {
                     ImageService.shared.loadImage(from: originalPath) {
+                        isLoading = false
                         //TODO: Handle failure case
                         self.image = $0
                     }
                 }
             }
         } else {
-            ImageService.shared.loadImage(from: originalPath) { self.image = $0 }
+            ImageService.shared.loadImage(from: originalPath) {
+                isLoading = false
+                self.image = $0
+            }
         }
     }
 
