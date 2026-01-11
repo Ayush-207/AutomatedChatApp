@@ -1,7 +1,9 @@
 Swiggy Chat App - iOS Assignment
 A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating modern iOS development practices with MVVM architecture, SwiftData persistence, and smooth animations.
-📱 Features Implemented
-Core Requirements ✅
+
+**📱 Features Implemented
+Core Requirements ✅**
+
 * Message Display
     * Chronological message ordering (oldest to newest)
     * Auto-scroll to latest message on load and new message send
@@ -63,8 +65,8 @@ Bonus Features Implemented ✨
     * When scrolled up: Chat remains in place (preserves reading position)
     * Tap anywhere to dismiss keyboard
     
-🏗️ Architecture
-MVVM Pattern
+****🏗️ Architecture****
+**MVVM Pattern**
 
 Models/
 ├── Message.swift          // Message data model
@@ -96,7 +98,7 @@ Prerequisites
 * iOS 17.0+ deployment target
 * Swift 5.9+
 
-📝 Architecture Decisions
+****📝 Architecture Decisions****
 
 1. SwiftData over UserDefaults/CoreData
 * Benefits:
@@ -125,7 +127,7 @@ Prerequisites
     * "Load More" fetches previous 15 messages
     * Database-level pagination
     
-🎨 Key Implementation Details
+****🎨 Key Implementation Details****
 
 Message Storage
 * Original images: Documents directory
@@ -142,7 +144,7 @@ Image Handling
 3. Download and cache for remote/local images.
 4. Update UI on main thread via completion handler.
 
-📸 Screenshots
+****📸 Screenshots****
 
 <img width="295" height="639" alt="IMG_0504" src="https://github.com/user-attachments/assets/a5010408-a8e5-4618-af13-d84ea0caecd9" />
 <img width="295" height="639" alt="IMG_0505" src="https://github.com/user-attachments/assets/824e7cb6-aa5d-471e-87a6-0f51da7d8118" />
@@ -151,7 +153,8 @@ Image Handling
 <img width="295" height="639" alt="IMG_0509" src="https://github.com/user-attachments/assets/fbbee38d-202a-4760-a515-1e7800908d9e" />
 <img width="295" height="639" alt="IMG_0510" src="https://github.com/user-attachments/assets/cae7e0fe-c3bd-4a5d-a19f-83ca8336607b" />
 
-🎯 Testing Notes
+****🎯 Testing Notes****
+
 Tested Scenarios
 * ✅ Sending text messages
 * ✅ Sending images from gallery
@@ -172,7 +175,7 @@ Device Compatibility
 * ✅ iPhone 15 Pro (standard)
 * ✅ iPhone 15 Pro Max (large)
 
-📦 Dependencies
+**📦 Dependencies**
 None - Pure SwiftUI with native Apple frameworks:
 * SwiftUI
 * SwiftData
