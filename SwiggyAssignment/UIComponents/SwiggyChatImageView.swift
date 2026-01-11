@@ -6,24 +6,45 @@
 //
 import SwiftUI
 
+enum ChatImageScaling {
+    case fit
+    case fill
+}
+
 struct SwiggyChatImageView: View {
     let originalPath: String
     let thumbnailPath: String?
 
     @State private var image: UIImage?
     @State private var isLoading = false
+    
+    var fixedSize: CGSize?
+    var imageScaling: ChatImageScaling
 
     var body: some View {
-        Group {
+        ZStack {
             if let image {
-                Image(uiImage: image)
-                    .resizable()
+                getImageView(image)
             } else {
                 placeholder
                     .onAppear {
                         loadIfNeeded()
                     }
             }
+        }
+        .frame(width: fixedSize != nil ? fixedSize?.width : nil, height: fixedSize != nil ? fixedSize?.height : nil)
+    }
+    
+    @ViewBuilder
+    func getImageView(_ image: UIImage) -> some View {
+        let base = Image(uiImage: image)
+                    .resizable()
+
+        switch imageScaling {
+        case .fill:
+            base.scaledToFill()
+        case .fit:
+            base.scaledToFit()
         }
     }
 
@@ -51,7 +72,6 @@ struct SwiggyChatImageView: View {
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: 12)
             .fill(Color.gray.opacity(0.3))
-            .frame(width: 250, height: 300)
             .overlay(
                 Image(systemName: "photo")
                     .font(.largeTitle)

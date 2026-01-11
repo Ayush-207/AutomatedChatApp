@@ -27,8 +27,7 @@ struct FullScreenImageView: View {
                     }
                 }
                 Spacer()
-                SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil)
-                    .scaledToFit()
+                SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil, imageScaling: .fit)
                     .scaleEffect(scale)
                     .gesture(
                         buildMagnificationGesture()

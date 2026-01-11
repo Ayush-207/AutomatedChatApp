@@ -97,6 +97,9 @@ struct ChatView: View {
                         }
                         .id(message.id)
                     }
+                    Color.clear
+                        .frame(height: 1)
+                        .id("BOTTOM")
                 }
                 .padding(.vertical)
             }
@@ -114,16 +117,18 @@ struct ChatView: View {
         }
     }
     
-    private func scrollToBottom(proxy: ScrollViewProxy, animated: Bool = true, withDuration duration: CGFloat = 0.3) {
-        print("LOGS:: \(#function), bottomID: \(viewModel.displayedMessages.last?.id), scrollToBottom: \(viewModel.scrollToBottom)")
-        guard let bottomID = viewModel.displayedMessages.last?.id,
-        viewModel.scrollToBottom else { return }
+    private func scrollToBottom(
+        proxy: ScrollViewProxy,
+        animated: Bool = true,
+        withDuration duration: CGFloat = 0.3) {
+        print("LOGS:: \(#function), scrollToBottom: \(viewModel.scrollToBottom)")
+        guard viewModel.scrollToBottom else { return }
         if animated {
             withAnimation(.easeOut(duration: duration)) {
-                proxy.scrollTo(bottomID, anchor: .bottom)
+                proxy.scrollTo("BOTTOM", anchor: .bottom)
             }
         } else {
-            proxy.scrollTo(bottomID, anchor: .bottom)
+            proxy.scrollTo("BOTTOM", anchor: .bottom)
         }
     }
     

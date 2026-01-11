@@ -21,9 +21,12 @@ struct MessageBubbleView: View {
             VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 4) {
                 if message.type == .file, let fileInfo = message.file {
                     VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 8) {
-                        SwiggyChatImageView(originalPath: fileInfo.path, thumbnailPath: fileInfo.thumbnail?.path)
-                        .scaledToFill()
-                        .frame(width: 250, height: 300)
+                        SwiggyChatImageView(
+                            originalPath: fileInfo.path,
+                            thumbnailPath: fileInfo.thumbnail?.path,
+                            fixedSize: .init(width: 250, height: 300),
+                            imageScaling: .fill
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
                             onImageTap(fileInfo.path)
@@ -83,17 +86,6 @@ struct MessageBubbleView: View {
         } message: {
             Text("Message copied to clipboard")
         }
-    }
-    
-    private var placeholderImage: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .fill(Color.gray.opacity(0.3))
-            .frame(width: 200, height: 200)
-            .overlay(
-                Image(systemName: "photo")
-                    .font(.largeTitle)
-                    .foregroundColor(.gray)
-            )
     }
 }
 
