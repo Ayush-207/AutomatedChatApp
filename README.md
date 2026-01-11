@@ -1,7 +1,7 @@
 # Swiggy Chat App - iOS Assignment
 A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating modern iOS development practices with MVVM architecture, SwiftData persistence, and smooth animations.
 
-##📱 Features Implemented
+## 📱 Features Implemented
 
 ### Core Requirements ✅
 
