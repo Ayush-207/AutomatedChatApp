@@ -19,7 +19,7 @@ A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating mo
   - Optional captions for images
   
 - **Message Input**
-  - Text input field with multi-line support (1-5 lines)
+  - Text input field with multi-line support
   - Send button (disabled when empty)
   - Attachment button for images from:
     - Photo Library
