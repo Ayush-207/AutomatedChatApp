@@ -144,12 +144,12 @@ Image Handling
 
 📸 Screenshots
 
-<img width="1179" height="2556" alt="IMG_0504" src="https://github.com/user-attachments/assets/a5010408-a8e5-4618-af13-d84ea0caecd9" />
-<img width="1179" height="2556" alt="IMG_0505" src="https://github.com/user-attachments/assets/824e7cb6-aa5d-471e-87a6-0f51da7d8118" />
-<img width="1179" height="2556" alt="IMG_0506" src="https://github.com/user-attachments/assets/8d6b2597-5266-47cb-8504-ae84cf943f27" />
-<img width="1179" height="2556" alt="IMG_0507" src="https://github.com/user-attachments/assets/c1167913-e788-4374-b59b-8907a0a1c34f" />
-<img width="1179" height="2556" alt="IMG_0509" src="https://github.com/user-attachments/assets/fbbee38d-202a-4760-a515-1e7800908d9e" />
-<img width="1179" height="2556" alt="IMG_0510" src="https://github.com/user-attachments/assets/cae7e0fe-c3bd-4a5d-a19f-83ca8336607b" />
+<img width="295" height="639" alt="IMG_0504" src="https://github.com/user-attachments/assets/a5010408-a8e5-4618-af13-d84ea0caecd9" />
+<img width="295" height="639" alt="IMG_0505" src="https://github.com/user-attachments/assets/824e7cb6-aa5d-471e-87a6-0f51da7d8118" />
+<img width="295" height="639" alt="IMG_0506" src="https://github.com/user-attachments/assets/8d6b2597-5266-47cb-8504-ae84cf943f27" />
+<img width="295" height="639" alt="IMG_0507" src="https://github.com/user-attachments/assets/c1167913-e788-4374-b59b-8907a0a1c34f" />
+<img width="295" height="639" alt="IMG_0509" src="https://github.com/user-attachments/assets/fbbee38d-202a-4760-a515-1e7800908d9e" />
+<img width="295" height="639" alt="IMG_0510" src="https://github.com/user-attachments/assets/cae7e0fe-c3bd-4a5d-a19f-83ca8336607b" />
 
 🎯 Testing Notes
 Tested Scenarios
