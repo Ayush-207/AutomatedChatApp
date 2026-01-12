@@ -17,15 +17,19 @@ struct ChatView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ZStack(alignment: .bottomTrailing) {
-                messagesScrollView
-                    .setupScrollBehavior(
-                        proxy: proxy,
-                        viewModel: viewModel,
-                        keyboard: keyboard,
-                        bottomViewYOrigin: $bottomViewYOrigin,
-                        chatViewHeight: $chatViewHeight,
-                        scrollWorkItem: $scrollWorkItem
-                    )
+                if viewModel.displayedMessages.isEmpty {
+                    emptyChatView
+                } else {
+                    messagesScrollView
+                        .setupScrollBehavior(
+                            proxy: proxy,
+                            viewModel: viewModel,
+                            keyboard: keyboard,
+                            bottomViewYOrigin: $bottomViewYOrigin,
+                            chatViewHeight: $chatViewHeight,
+                            scrollWorkItem: $scrollWorkItem
+                        )
+                }
                 
                 if shouldShowFastScrollButton {
                     fastScrollButton {
@@ -48,6 +52,21 @@ struct ChatView: View {
     }
     
     // MARK: - View Components
+    private var emptyChatView: some View {
+        ZStack(alignment: .center) {
+            Color.clear
+            VStack(spacing: 10) {
+                Text("Start Chatting")
+                    .font(.title2)
+                    .foregroundColor(.secondary)
+                
+                Image(systemName: "message")
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
     
     private var messagesScrollView: some View {
         ScrollView {
