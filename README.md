@@ -216,10 +216,12 @@ Utilities/
 
 ## 📸 Screenshots
 
-<figure>
+<p align="center">
   <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661" />
-  <figcaption><i>Figure 1:</i> Chat Detail Page </figcaption>
-</figure>
+</p>
+<p align="center">
+  <em>Figure 1: Chat Detail Page</em>
+</p>
 
 <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
 *Image Picker
