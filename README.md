@@ -215,19 +215,26 @@ Utilities/
 4. Update UI on main thread via completion handler
 
 ## 📸 Screenshots
+
 <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661" />
+*Chat Detail Page
 
 <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
+*Image Picker
 
 <img width="295" height="639" alt="IMG_0516" src="https://github.com/user-attachments/assets/7ccf4dfb-188a-4829-a762-844f0b9f2caf" />
-
 <img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
+*Image from photo library
 
 <img width="295" height="639" alt="IMG_0519" src="https://github.com/user-attachments/assets/9d02ad87-d0a5-4a1b-8ade-451961ee9666" />
-
 <img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
+*Image from camera
 
-<img width="295" height="639" alt="GIF_FullScreenView" src="[https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411](https://github.com/user-attachments/assets/2efc4733-8e44-44b8-b373-8dbbbd0bc6dd)" />
+<img width="295" height="639" alt="IMG_0530" src="https://github.com/user-attachments/assets/f2e4e86b-fadd-462a-802b-0e3afc83c55b" />
+*Time based message grouping
+
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/2efc4733-8e44-44b8-b373-8dbbbd0bc6dd" />
+*Full Screen Image View
 
 https://github.com/user-attachments/assets/8fcf9602-9fcf-496f-91f5-b696b4a89e96
 
