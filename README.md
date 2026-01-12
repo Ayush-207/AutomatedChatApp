@@ -220,25 +220,45 @@ Utilities/
   <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661" />
 </p>
 <p align="center">
-  <em>Figure 1: Chat Detail Page</em>
+  <em>Chat Detail Page</em>
 </p>
 
-<img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
-*Image Picker
+<p align="center">
+  <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
+</p>
+<p align="center">
+  <em>Image Picker</em>
+</p>
 
-<img width="295" height="639" alt="IMG_0516" src="https://github.com/user-attachments/assets/7ccf4dfb-188a-4829-a762-844f0b9f2caf" />
-<img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
-*Image from photo library
+<p align="center">
+  <img width="295" height="639" alt="IMG_0516" src="https://github.com/user-attachments/assets/7ccf4dfb-188a-4829-a762-844f0b9f2caf" />
+  <img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
+</p>
+<p align="center">
+  <em>Image from photo libraryr</em>
+</p>
 
-<img width="295" height="639" alt="IMG_0519" src="https://github.com/user-attachments/assets/9d02ad87-d0a5-4a1b-8ade-451961ee9666" />
-<img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
-*Image from camera
+<p align="center">
+  <img width="295" height="639" alt="IMG_0519" src="https://github.com/user-attachments/assets/9d02ad87-d0a5-4a1b-8ade-451961ee9666" />
+  <img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
+</p>
+<p align="center">
+  <em>Image from camera</em>
+</p>
 
-<img width="295" height="639" alt="IMG_0530" src="https://github.com/user-attachments/assets/f2e4e86b-fadd-462a-802b-0e3afc83c55b" />
-*Time based message grouping
+<p align="center">
+  <img width="295" height="639" alt="IMG_0530" src="https://github.com/user-attachments/assets/f2e4e86b-fadd-462a-802b-0e3afc83c55b" />
+</p>
+<p align="center">
+  <em>Time based message grouping</em>
+</p>
 
+<p align="center">
 <img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/2efc4733-8e44-44b8-b373-8dbbbd0bc6dd" />
-*Full Screen Image View
+</p>
+<p align="center">
+  <em>Full Screen Image View</em>
+</p>
 
 https://github.com/user-attachments/assets/8fcf9602-9fcf-496f-91f5-b696b4a89e96
 
