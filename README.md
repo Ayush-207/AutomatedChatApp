@@ -235,7 +235,7 @@ Utilities/
   <img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
 </p>
 <p align="center">
-  <em>Image from photo libraryr</em>
+  <em>Image from photo library</em>
 </p>
 
 <p align="center">
@@ -260,13 +260,19 @@ Utilities/
   <em>Full Screen Image View</em>
 </p>
 
-https://github.com/user-attachments/assets/8fcf9602-9fcf-496f-91f5-b696b4a89e96
+<p align="center">
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/e5a6b60d-0f96-406e-b62d-fb30389c3fdb" />
+</p>
+<p align="center">
+  <em>Simulated Agent Typing</em>
+</p>
 
-
-https://github.com/user-attachments/assets/2ed7b4a4-b603-48d4-97bc-ec31514db4e3
-
-
-https://github.com/user-attachments/assets/2f715e9d-d319-41c5-8dcf-003b11226825
+<p align="center">
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/df6aa14d-3e3e-4872-9fc2-ac3412ce308e" />
+</p>
+<p align="center">
+  <em>Messages Load Chunking</em>
+</p>
 
 ## 🎯 Testing Notes
 
