@@ -126,7 +126,7 @@ Services/
 └── HapticManager.swift     // Handles Haptics
 
 Utilities/
-└── Date+Extensions.swift  // Smart timestamp formatting
+└── Extensions+Date.swift  // Smart timestamp formatting
 └── SeedData.swift         // Initial mock messages
 └── KeyboardObserver.swift // ObservableObject for observing keyboard events 
 ```

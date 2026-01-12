@@ -14,19 +14,9 @@ struct FullScreenImageView: View {
     @State private var lastScale: CGFloat = 1.0
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .center) {
             Color.black.ignoresSafeArea()
-            VStack {
-                HStack {
-                    Spacer()
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                }
-                Spacer()
+            ZStack(alignment: .topTrailing) {
                 SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil, imageScaling: .fit)
                     .scaleEffect(scale)
                     .gesture(
@@ -35,7 +25,13 @@ struct FullScreenImageView: View {
                     .onTapGesture(count: 2) {
                         onDoubleTapGesture()
                     }
-                Spacer()
+                
+                Button(action: { dismiss() }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding()
+                }
             }
         }
     }
