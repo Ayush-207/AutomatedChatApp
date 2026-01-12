@@ -7,10 +7,33 @@
 
 import SwiftUI
 
+struct RoundedCorner: Shape {
+    var radius: CGFloat
+    var corners: UIRectCorner
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}
+
 struct MessageBubbleView: View {
+    let showMessageTail: Bool
+    let showTime: Bool
     let message: Message
     let onImageTap: (String) -> Void
     @State private var showCopyAlert = false
+    
+    var roundedCorners: UIRectCorner {
+        guard showMessageTail else {
+            return [.allCorners]
+        }
+        return [(message.sender == .user ? .topLeft : .topRight), .bottomLeft, .bottomRight]
+    }
     
     var body: some View {
         HStack {
@@ -60,15 +83,43 @@ struct MessageBubbleView: View {
                     }
                     .frame(width: 250)
                     .padding(8)
-                    .background(message.sender == .user ? Color.blue.opacity(0.1) : Color(.systemGray6))
-                    .cornerRadius(16)
+                    .background(message.sender == .user ? Color(
+                        red: 0.9,
+                        green: 0.95,
+                        blue: 1.0
+                    ) : Color(.systemGray6))
+                    .clipShape(RoundedCorner(radius: 16, corners: roundedCorners))
+                    .background(alignment: message.sender == .user ? .topTrailing : .topLeading) {
+                        if showMessageTail {
+                            BubbleTailShape(isFromUser: message.sender == .user)
+                                .fill(message.sender == .user ? Color(
+                                    red: 0.9,
+                                    green: 0.95,
+                                    blue: 1.0
+                                ) : Color(.systemGray6))
+                                .frame(width: 35, height: 30)
+                                .offset(x: message.sender == .user ? 10 : -10)
+                        } else {
+                            Color.clear
+                        }
+                    }
                 } else {
                     Text(message.message)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
                         .background(message.sender == .user ? Color.blue : Color(.systemGray5))
                         .foregroundColor(message.sender == .user ? .white : .primary)
-                        .cornerRadius(16)
+                        .clipShape(RoundedCorner(radius: 10, corners: roundedCorners))
+                        .background(alignment: message.sender == .user ? .topTrailing : .topLeading) {
+                            if showMessageTail {
+                                BubbleTailShape(isFromUser: message.sender == .user)
+                                    .fill(message.sender == .user ? Color.blue : Color(.systemGray5))
+                                    .frame(width: 35, height: 30)
+                                    .offset(x: message.sender == .user ? 10 : -10)
+                            } else {
+                                Color.clear
+                            }
+                        }
                         .contextMenu {
                             Button(action: {
                                 UIPasteboard.general.string = message.message
@@ -79,10 +130,12 @@ struct MessageBubbleView: View {
                         }
                 }
                 
-                Text(message.formattedTime)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 4)
+                if showTime {
+                    Text(message.formattedTime)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 4)
+                }
             }
             
             if message.sender == .agent {
@@ -90,7 +143,8 @@ struct MessageBubbleView: View {
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 2)
+        .padding(.bottom, 2)
+        .padding(.top, showMessageTail ? 2 : -6)
         .alert("Copied", isPresented: $showCopyAlert) {
             Button("OK", role: .cancel) { }
         } message: {
@@ -101,22 +155,24 @@ struct MessageBubbleView: View {
 
 #Preview {
     VStack {
-        MessageBubbleView(message: Message(
-            id: "1",
-            message: "Hello! How can I help you today?",
-            type: .text,
-            file: nil,
-            sender: .agent,
-            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
-        ), onImageTap: { _ in })
-        
-        MessageBubbleView(message: Message(
-            id: "2",
-            message: "I need help with my booking",
-            type: .text,
-            file: nil,
-            sender: .user,
-            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
-        ), onImageTap: { _ in })
+//        MessageBubbleView(message: Message(
+//            id: "1",
+//            message: "Hello! How can I help you today?",
+//            type: .text,
+//            file: nil,
+//            sender: .agent,
+//            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
+//        ), onImageTap: { _ in })
+//        
+//        MessageBubbleView(message: Message(
+//            id: "2",
+//            message: "I need help with my booking",
+//            type: .text,
+//            file: nil,
+//            sender: .user,
+//            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
+//        ), onImageTap: { _ in })
+        BubbleTailShape(isFromUser: true)
+            .frame(width: 14, height: 10)
     }
 }

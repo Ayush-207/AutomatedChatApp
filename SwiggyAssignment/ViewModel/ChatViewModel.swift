@@ -95,7 +95,7 @@ class ChatViewModel: ObservableObject {
             
             let newMessage = Message(
                 id: UUID().uuidString,
-                message: inputText.isEmpty ? "" : inputText,
+                message: !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? inputText : "",
                 type: .file,
                 file: FileInfo(
                     path: result.originalURL,
@@ -123,6 +123,23 @@ class ChatViewModel: ObservableObject {
     func openPhotoLibrary() {
         imageSourceType = .photoLibrary
         showImagePicker = true
+    }
+    
+    func showTime(for index: Int) -> Bool {
+        guard displayedMessages.count > 1 else { return true }
+        guard (index + 1) < displayedMessages.count,
+              displayedMessages[index].sender == displayedMessages[index + 1].sender else {
+            return true
+        }
+        return displayedMessages[index].formattedTime != displayedMessages[index + 1].formattedTime
+    }
+    
+    func showMessageTail(for index: Int) -> Bool {
+        guard displayedMessages.count > 1, index > 0 else { return true }
+        guard displayedMessages[index].sender == displayedMessages[index - 1].sender else {
+            return true
+        }
+        return displayedMessages[index].formattedTime != displayedMessages[index - 1].formattedTime
     }
     
     private func simulateAgentMessage() {

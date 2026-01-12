@@ -40,6 +40,7 @@ struct MessageInputView: View {
                 Button(action: {
                     isTextFieldFocused = false
                     viewModel.showActionSheet = true
+                    HapticManager.shared.selection()
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 28))
@@ -61,6 +62,7 @@ struct MessageInputView: View {
                     } else {
                         viewModel.sendMessage()
                     }
+                    HapticManager.shared.impact(style: .medium)
                 }) {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 32))

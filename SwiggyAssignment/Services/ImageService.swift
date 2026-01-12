@@ -23,7 +23,7 @@ final class ImageService {
     func saveImage(
         _ image: UIImage,
         compressionQuality: CGFloat = 0.85,
-        thumbnailMaxSize: CGFloat = 100
+        thumbnailMaxSize: CGFloat = 400
     ) -> StoredImage? {
 
         guard let data = image.jpegData(compressionQuality: compressionQuality) else {
@@ -83,7 +83,7 @@ final class ImageService {
         UIGraphicsEndImageContext()
 
         guard let thumbnail = thumbnailImage,
-              let data = thumbnail.jpegData(compressionQuality: 0.8)
+              let data = thumbnail.jpegData(compressionQuality: 0.9)
         else { return nil }
 
         let filename = "thumb_\(UUID().uuidString).jpg"

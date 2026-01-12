@@ -6,34 +6,6 @@
 //
 
 import SwiftUI
-import Combine
-
-final class KeyboardObserver: ObservableObject {
-    @Published var height: CGFloat = 0
-
-    private var cancellables = Set<AnyCancellable>()
-
-    init() {
-        let willShow = NotificationCenter.default.publisher(
-            for: UIResponder.keyboardWillShowNotification
-        )
-        let willHide = NotificationCenter.default.publisher(
-            for: UIResponder.keyboardWillHideNotification
-        )
-
-        Publishers.Merge(willShow, willHide)
-            .sink { notification in
-                let frame = notification
-                    .userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-                self.height = notification.name == UIResponder.keyboardWillHideNotification
-                    ? 0
-                    : frame?.height ?? 0
-                
-                print("LOGS:: keyboard height: \(self.height)")
-            }
-            .store(in: &cancellables)
-    }
-}
 
 struct ChatScreenView: View {
     @StateObject private var viewModel = ChatViewModel()
@@ -94,8 +66,12 @@ struct ChatView: View {
                             }
                         }
                         
-                        ForEach(viewModel.displayedMessages) { message in
-                            MessageBubbleView(message: message) { imagePath in
+                        ForEach(Array(viewModel.displayedMessages.enumerated()), id: \.element.id) { index, message in
+                            MessageBubbleView(
+                                showMessageTail: viewModel.showMessageTail(for: index),
+                                showTime: viewModel.showTime(for: index),
+                                message: message
+                            ) { imagePath in
                                 viewModel.selectedImageForFullScreen = imagePath
                             }
                             .id(message.id)
