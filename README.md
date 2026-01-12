@@ -1,4 +1,4 @@
-<img width="1179" height="2556" alt="IMG_0517" src="https://github.com/user-attachments/assets/df995015-8a3e-4233-b6fe-453f6bd6ef54" /><img width="1179" height="2556" alt="IMG_0511" src="https://github.com/user-attachments/assets/cf07d8cc-a835-45e3-a6c7-96954b8a4d65" /># Swiggy Chat App - iOS Assignment
+# Swiggy Chat App - iOS Assignment
 A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating modern iOS development practices with MVVM architecture, SwiftData persistence, and smooth animations.
 
 ## 📱 Features Implemented
@@ -215,7 +215,7 @@ Utilities/
 4. Update UI on main thread via completion handler
 
 ## 📸 Screenshots
-![Screenshot 2026-01-12 at 2 37 40 pm](https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661)
+<img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661" />
 
 <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
 
@@ -227,6 +227,7 @@ Utilities/
 
 <img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
 
+<img width="295" height="639" alt="GIF_FullScreenView" src="[https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411](https://github.com/user-attachments/assets/2efc4733-8e44-44b8-b373-8dbbbd0bc6dd)" />
 
 https://github.com/user-attachments/assets/8fcf9602-9fcf-496f-91f5-b696b4a89e96
 
