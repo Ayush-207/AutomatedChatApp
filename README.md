@@ -216,12 +216,63 @@ Utilities/
 
 ## 📸 Screenshots
 
-<img width="295" height="639" alt="IMG_0504" src="https://github.com/user-attachments/assets/a5010408-a8e5-4618-af13-d84ea0caecd9" />
-<img width="295" height="639" alt="IMG_0505" src="https://github.com/user-attachments/assets/824e7cb6-aa5d-471e-87a6-0f51da7d8118" />
-<img width="295" height="639" alt="IMG_0506" src="https://github.com/user-attachments/assets/8d6b2597-5266-47cb-8504-ae84cf943f27" />
-<img width="295" height="639" alt="IMG_0507" src="https://github.com/user-attachments/assets/c1167913-e788-4374-b59b-8907a0a1c34f" />
-<img width="295" height="639" alt="IMG_0509" src="https://github.com/user-attachments/assets/fbbee38d-202a-4760-a515-1e7800908d9e" />
-<img width="295" height="639" alt="IMG_0510" src="https://github.com/user-attachments/assets/cae7e0fe-c3bd-4a5d-a19f-83ca8336607b" />
+<p align="center">
+  <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661" />
+</p>
+<p align="center">
+  <em>Chat Detail Page</em>
+</p>
+
+<p align="center">
+  <img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
+</p>
+<p align="center">
+  <em>Image Picker</em>
+</p>
+
+<p align="center">
+  <img width="295" height="639" alt="IMG_0516" src="https://github.com/user-attachments/assets/7ccf4dfb-188a-4829-a762-844f0b9f2caf" />
+  <img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
+</p>
+<p align="center">
+  <em>Image from photo library</em>
+</p>
+
+<p align="center">
+  <img width="295" height="639" alt="IMG_0519" src="https://github.com/user-attachments/assets/9d02ad87-d0a5-4a1b-8ade-451961ee9666" />
+  <img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
+</p>
+<p align="center">
+  <em>Image from camera</em>
+</p>
+
+<p align="center">
+  <img width="295" height="639" alt="IMG_0530" src="https://github.com/user-attachments/assets/f2e4e86b-fadd-462a-802b-0e3afc83c55b" />
+</p>
+<p align="center">
+  <em>Time based message grouping</em>
+</p>
+
+<p align="center">
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/2efc4733-8e44-44b8-b373-8dbbbd0bc6dd" />
+</p>
+<p align="center">
+  <em>Full Screen Image View</em>
+</p>
+
+<p align="center">
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/e5a6b60d-0f96-406e-b62d-fb30389c3fdb" />
+</p>
+<p align="center">
+  <em>Simulated Agent Typing</em>
+</p>
+
+<p align="center">
+<img width="295" height="639" alt="GIF_FullScreenView" src="https://github.com/user-attachments/assets/df6aa14d-3e3e-4872-9fc2-ac3412ce308e" />
+</p>
+<p align="center">
+  <em>Messages Load Chunking</em>
+</p>
 
 ## 🎯 Testing Notes
 
