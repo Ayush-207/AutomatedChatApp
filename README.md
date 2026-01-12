@@ -77,6 +77,21 @@ A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating mo
   - When at bottom: Chat shifts up seamlessly with keyboard
   - When scrolled up: Chat remains in place (preserves reading position)
   - Tap anywhere to dismiss keyboard
+  
+- **Time-based Message Grouping**
+  - Messages grouped by date with only the first message in group having tail.
+  - Improved readability for long conversation histories
+
+- **Message Bubble Tails**
+  - Professional chat UI with bubble pointers
+  - Left-pointing tail for agent messages
+  - Right-pointing tail for user messages
+  - Coupled with time-based message grouping. Only shown for first message in a group.
+
+- **Haptic Feedback**
+  - Tactile feedback on message send
+  - Selection feedback on button interactions
+  - Enhances premium app feel
 
 - **Fast scroll to last message button**
   - Appears when offset is greater than 100, fast scroll to bottom button like in Whatsapp.
@@ -101,15 +116,18 @@ Views/
 ├── FullScreenImageView.swift // Full-screen image viewer
 ├── TypingIndicatorView.swift // Animated typing dots
 ├── SwiggyChatImageView.swift // Custom cached image view
-└── ImagePicker.swift      // Camera/Gallery picker
+├── ImagePicker.swift      // Camera/Gallery picker
+└── BubbleTailShape.swift      // Bubble tail shape for message bubble
 
 Services/
 └── StorageService.swift   // SwiftData persistence layer
 └── ImageService.swift     // Image caching & compression
+└── HapticManager.swift     // Handles Haptics
 
 Utilities/
 └── Date+Extensions.swift  // Smart timestamp formatting
 └── SeedData.swift         // Initial mock messages
+└── KeyboardObserver.swift // ObservableObject for observing keyboard events 
 ```
 
 ## 📝 Architecture Decisions
@@ -143,8 +161,39 @@ Utilities/
    - **Implementation**:
      - Initial load: Last 15 messages
      - "Load More" fetches previous 15 messages
-     - Database-level pagination (not in-memory filtering)
-    
+     - Database-level pagination
+
+### 6. **Message Bubble Tails**
+   - **Why**: Professional, familiar chat interface design
+   - **Implementation**:
+     - Custom `BubbleTailShape` using SwiftUI `Shape` protocol
+     - Dynamic positioning based on message sender
+     - Color-matched with bubble background
+   - **Benefits**:
+     - Clearer visual indication of message direction
+     - Industry-standard chat UI pattern (WhatsApp, iMessage, Telegram)
+
+### 7. **Time-based Message Grouping**
+   - **Implementation**:
+     - Messages grouped by date boundaries
+     - Date only shown for last message in a group
+     - Message Bubble Tail only shown for first message in a group.
+     - Custom grouping logic based on timestamp comparison
+   - **Benefits**:
+     - Easy to navigate long conversations
+     - Clear temporal context for messages
+     - Reduced visual clutter
+
+### 8. **Haptic Feedback System**
+   - **Implementation**:
+     - Centralized `HapticManager` singleton
+     - Different feedback types (impact, selection)
+     - Strategic placement on key interactions
+   - **Benefits**:
+     - Physical confirmation of actions
+     - Enhanced perceived responsiveness
+     - Modern iOS app standard
+     
 ## 🎨 Key Implementation Details
 
 ### Message Storage
