@@ -274,6 +274,13 @@ Utilities/
   <em>Messages Load Chunking</em>
 </p>
 
+<p align="center">
+<img width="295" height="639" alt="GIF_ImageErrorHandling" src="https://github.com/user-attachments/assets/6d463ef0-95bb-43cb-97f2-fbe3b05d0b72" />
+</p>
+<p align="center">
+  <em>Image Download Error handling</em>
+</p>
+
 ## 🎯 Testing Notes
 
 Tested Scenarios
