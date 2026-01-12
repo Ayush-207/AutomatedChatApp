@@ -64,7 +64,7 @@ A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating mo
 
 - **Image Compression & Thumbnails**
   - Images compressed to 85% quality before saving
-  - Automatic thumbnail generation (100px max dimension)
+  - Automatic thumbnail generation (400px max dimension)
   - Thumbnails stored separately in cache directory
   - Custom `SwiggyChatImageView` handles thumbnail-first loading
 
@@ -110,7 +110,8 @@ ViewModels/
 
 Views/
 ├── HomeView.swift         // Simple home navigation
-├── ChatView.swift         // Chat detail page
+├── ChatScreenView.swift   // Chat detail page
+├── ChatView.swift         // Message list view
 ├── MessageBubbleView.swift // Individual message rendering
 ├── MessageInputView.swift  // Input field & controls
 ├── FullScreenImageView.swift // Full-screen image viewer

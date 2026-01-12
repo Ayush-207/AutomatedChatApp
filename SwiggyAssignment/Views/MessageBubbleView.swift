@@ -26,14 +26,8 @@ struct MessageBubbleView: View {
     let showTime: Bool
     let message: Message
     let onImageTap: (String) -> Void
-    @State private var showCopyAlert = false
     
-    var roundedCorners: UIRectCorner {
-        guard showMessageTail else {
-            return [.allCorners]
-        }
-        return [(message.sender == .user ? .topLeft : .topRight), .bottomLeft, .bottomRight]
-    }
+    @State private var showCopyAlert = false
     
     var body: some View {
         HStack {
@@ -41,100 +35,11 @@ struct MessageBubbleView: View {
                 Spacer()
             }
             
-            VStack(alignment: message.sender == .user ? .trailing : .leading, spacing: 4) {
-                if message.type == .file, let fileInfo = message.file {
-                    VStack(alignment: .leading, spacing: 8) {
-                        SwiggyChatImageView(
-                            originalPath: fileInfo.path,
-                            thumbnailPath: fileInfo.thumbnail?.path,
-                            fixedSize: .init(width: 250, height: 300),
-                            imageScaling: .fill
-                        )
-                        .overlay {
-                            ZStack(alignment: .bottomTrailing) {
-                                Color.black
-                                    .opacity(0.2)
-                                    .frame(width: 250, height: 300)
-                                Text(ImageService.shared.formatFileSize(fileInfo.fileSize))
-                                    .font(.system(size: 9, weight: .regular))
-                                    .foregroundColor(.white)
-                                    .padding(.trailing, 5)
-                                    .padding(.bottom, 5)
-                            }
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .contentShape(RoundedRectangle(cornerRadius: 12))
-                        .onTapGesture {
-                            onImageTap(fileInfo.path)
-                        }
-                        
-                        if !message.message.isEmpty {
-                            Text(message.message)
-                                .padding(.vertical, 3)
-                                .contextMenu {
-                                    Button(action: {
-                                        UIPasteboard.general.string = message.message
-                                        showCopyAlert = true
-                                    }) {
-                                        Label("Copy Text", systemImage: "doc.on.doc")
-                                    }
-                                }
-                        }
-                    }
-                    .frame(width: 250)
-                    .padding(8)
-                    .background(message.sender == .user ? Color(
-                        red: 0.9,
-                        green: 0.95,
-                        blue: 1.0
-                    ) : Color(.systemGray6))
-                    .clipShape(RoundedCorner(radius: 16, corners: roundedCorners))
-                    .background(alignment: message.sender == .user ? .topTrailing : .topLeading) {
-                        if showMessageTail {
-                            BubbleTailShape(isFromUser: message.sender == .user)
-                                .fill(message.sender == .user ? Color(
-                                    red: 0.9,
-                                    green: 0.95,
-                                    blue: 1.0
-                                ) : Color(.systemGray6))
-                                .frame(width: 35, height: 30)
-                                .offset(x: message.sender == .user ? 10 : -10)
-                        } else {
-                            Color.clear
-                        }
-                    }
-                } else {
-                    Text(message.message)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(message.sender == .user ? Color.blue : Color(.systemGray5))
-                        .foregroundColor(message.sender == .user ? .white : .primary)
-                        .clipShape(RoundedCorner(radius: 10, corners: roundedCorners))
-                        .background(alignment: message.sender == .user ? .topTrailing : .topLeading) {
-                            if showMessageTail {
-                                BubbleTailShape(isFromUser: message.sender == .user)
-                                    .fill(message.sender == .user ? Color.blue : Color(.systemGray5))
-                                    .frame(width: 35, height: 30)
-                                    .offset(x: message.sender == .user ? 10 : -10)
-                            } else {
-                                Color.clear
-                            }
-                        }
-                        .contextMenu {
-                            Button(action: {
-                                UIPasteboard.general.string = message.message
-                                showCopyAlert = true
-                            }) {
-                                Label("Copy Text", systemImage: "doc.on.doc")
-                            }
-                        }
-                }
+            VStack(alignment: bubbleAlignment, spacing: 4) {
+                messageBubbleContent
                 
                 if showTime {
-                    Text(message.formattedTime)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 4)
+                    timestampView
                 }
             }
             
@@ -151,28 +56,157 @@ struct MessageBubbleView: View {
             Text("Message copied to clipboard")
         }
     }
+    
+    // MARK: - Computed Properties
+    
+    private var isFromUser: Bool {
+        message.sender == .user
+    }
+    
+    private var bubbleAlignment: HorizontalAlignment {
+        isFromUser ? .trailing : .leading
+    }
+    
+    private var roundedCorners: UIRectCorner {
+        guard showMessageTail else { return .allCorners }
+        return [isFromUser ? .topLeft : .topRight, .bottomLeft, .bottomRight]
+    }
+    
+    private var userBubbleColor: Color {
+        Color(red: 0.9, green: 0.95, blue: 1.0)
+    }
+    
+    private var agentBubbleColor: Color {
+        Color(.systemGray6)
+    }
+    
+    private var bubbleColor: Color {
+        isFromUser ? .blue : Color(.systemGray5)
+    }
+    
+    private var textColor: Color {
+        isFromUser ? .white : .primary
+    }
+    
+    // MARK: - View Components
+    
+    @ViewBuilder
+    private var messageBubbleContent: some View {
+        if message.type == .file, let fileInfo = message.file {
+            imageMessageView(fileInfo: fileInfo)
+        } else {
+            textMessageView
+        }
+    }
+    
+    private func imageMessageView(fileInfo: FileInfo) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            imageWithOverlay(fileInfo: fileInfo)
+            
+            if !message.message.isEmpty {
+                captionView
+            }
+        }
+        .frame(width: 250)
+        .padding(8)
+        .background(isFromUser ? userBubbleColor : agentBubbleColor)
+        .clipShape(RoundedCorner(radius: 16, corners: roundedCorners))
+        .bubbleTail(
+            show: showMessageTail,
+            isFromUser: isFromUser,
+            color: isFromUser ? userBubbleColor : agentBubbleColor
+        )
+    }
+    
+    private func imageWithOverlay(fileInfo: FileInfo) -> some View {
+        SwiggyChatImageView(
+            originalPath: fileInfo.path,
+            thumbnailPath: fileInfo.thumbnail?.path,
+            fixedSize: CGSize(width: 250, height: 300),
+            imageScaling: .fill
+        )
+        .overlay {
+            fileSizeOverlay(fileSize: fileInfo.fileSize)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .contentShape(RoundedRectangle(cornerRadius: 12))
+        .onTapGesture {
+            onImageTap(fileInfo.path)
+        }
+    }
+    
+    private func fileSizeOverlay(fileSize: Int64) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            Color.black.opacity(0.2)
+            
+            Text(ImageService.shared.formatFileSize(fileSize))
+                .font(.system(size: 9, weight: .regular))
+                .foregroundColor(.white)
+                .padding(.trailing, 5)
+                .padding(.bottom, 5)
+        }
+        .frame(width: 250, height: 300)
+    }
+    
+    private var captionView: some View {
+        Text(message.message)
+            .padding(.vertical, 3)
+            .contextMenu {
+                copyButton
+            }
+    }
+    
+    private var textMessageView: some View {
+        Text(message.message)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(bubbleColor)
+            .foregroundColor(textColor)
+            .clipShape(RoundedCorner(radius: 10, corners: roundedCorners))
+            .bubbleTail(
+                show: showMessageTail,
+                isFromUser: isFromUser,
+                color: bubbleColor
+            )
+            .contextMenu {
+                copyButton
+            }
+    }
+    
+    private var timestampView: some View {
+        Text(message.formattedTime)
+            .font(.caption2)
+            .foregroundColor(.secondary)
+            .padding(.horizontal, 4)
+    }
+    
+    private var copyButton: some View {
+        Button(action: copyMessageText) {
+            Label("Copy Text", systemImage: "doc.on.doc")
+        }
+    }
+    
+    // MARK: - Actions
+    
+    private func copyMessageText() {
+        UIPasteboard.general.string = message.message
+        showCopyAlert = true
+    }
 }
 
-#Preview {
-    VStack {
-//        MessageBubbleView(message: Message(
-//            id: "1",
-//            message: "Hello! How can I help you today?",
-//            type: .text,
-//            file: nil,
-//            sender: .agent,
-//            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
-//        ), onImageTap: { _ in })
-//        
-//        MessageBubbleView(message: Message(
-//            id: "2",
-//            message: "I need help with my booking",
-//            type: .text,
-//            file: nil,
-//            sender: .user,
-//            timestamp: Int64(Date().timeIntervalSince1970 * 1000)
-//        ), onImageTap: { _ in })
-        BubbleTailShape(isFromUser: true)
-            .frame(width: 14, height: 10)
+// MARK: - View Extensions
+
+extension View {
+    func bubbleTail(show: Bool, isFromUser: Bool, color: Color) -> some View {
+        self.background(alignment: isFromUser ? .topTrailing : .topLeading) {
+            if show {
+                BubbleTailShape(isFromUser: isFromUser)
+                    .fill(color)
+                    .frame(width: 35, height: 30)
+                    .offset(x: isFromUser ? 10 : -10)
+            } else {
+                Color.clear
+            }
+        }
     }
 }

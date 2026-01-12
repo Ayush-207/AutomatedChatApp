@@ -4,150 +4,142 @@
 //
 //  Created by Ayush Goyal on 10/01/26.
 //
-
 import SwiftUI
-
-struct ChatScreenView: View {
-    @StateObject private var viewModel = ChatViewModel()
-        
-    var body: some View {
-        VStack(spacing: 0) {
-            ChatView(viewModel: viewModel)
-            Divider()
-            MessageInputView(viewModel: viewModel)
-        }
-        .navigationTitle("Chat")
-        .navigationBarTitleDisplayMode(.inline)
-        .fullScreenCover(item: Binding(
-            get: { viewModel.selectedImageForFullScreen.map { ImageWrapper(path: $0) } },
-            set: { viewModel.selectedImageForFullScreen = $0?.path }
-        )) { wrapper in
-            FullScreenImageView(imagePath: wrapper.path)
-        }
-    }
-}
 
 struct ChatView: View {
     @ObservedObject var viewModel: ChatViewModel
-    @StateObject var keyboard = KeyboardObserver()
-    
-    var isAtBottom: Bool {
-        let dif = bottomViewYOrigin - chatViewHeight
-        return abs(dif) <= 40
-    }
-    
-    var showFastScrollToBottom: Bool {
-        return keyboard.height + chatViewHeight + 100.0 < bottomViewYOrigin
-    }
+    @StateObject private var keyboard = KeyboardObserver()
     
     @State private var scrollWorkItem: DispatchWorkItem?
-    
-    @State var bottomViewYOrigin: CGFloat = 0
-    @State var chatViewHeight: CGFloat = 0
+    @State private var bottomViewYOrigin: CGFloat = 0
+    @State private var chatViewHeight: CGFloat = 0
     
     var body: some View {
         ScrollViewReader { proxy in
             ZStack(alignment: .bottomTrailing) {
-                ScrollView {
-                    VStack(spacing: 8) {
-                        if viewModel.hasMoreMessages {
-                            Button(action: {
-                                viewModel.loadMoreMessages()
-                            }) {
-                                if viewModel.isLoadingMore {
-                                    ProgressView()
-                                        .padding()
-                                } else {
-                                    Text("Load More")
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                        .padding()
-                                }
-                            }
-                        }
-                        
-                        ForEach(Array(viewModel.displayedMessages.enumerated()), id: \.element.id) { index, message in
-                            MessageBubbleView(
-                                showMessageTail: viewModel.showMessageTail(for: index),
-                                showTime: viewModel.showTime(for: index),
-                                message: message
-                            ) { imagePath in
-                                viewModel.selectedImageForFullScreen = imagePath
-                            }
-                            .id(message.id)
-                        }
-                        if viewModel.isAgentTyping {
-                            TypingIndicatorView()
-                        }
-                        Color.clear
-                            .frame(maxWidth: .infinity, maxHeight: 1)
-                            .id("BOTTOM")
-                            .background(
-                                GeometryReader { geo in
-                                    Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: geo.frame(in: .scrollView))
-                                }
-                            )
-                    }
-                    .padding(.vertical)
-                }
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self, perform: { frame in
-                    bottomViewYOrigin = frame.origin.y
-                })
-                .contentShape(Rectangle())
-                .background(
-                    GeometryReader { geometry in
-                        Color.clear
-                            .onAppear {
-                                chatViewHeight = geometry.frame(in: .local).height
-                            }
-                            .onChange(of: geometry.frame(in: .local)) {
-                                chatViewHeight = geometry.frame(in: .local).height
-                            }
-                    }
-                )
-                .onTapGesture {
-                    hideKeyboard()
-                }
-                .onChange(of: viewModel.displayedMessages.count) { _, _ in
-                    scrollToBottom(proxy: proxy)
-                }
-                .onChange(of: keyboard.height) { oldValue, newValue in
-                    if newValue > oldValue && (keyboard.height + chatViewHeight > bottomViewYOrigin) {
-                        viewModel.scrollToBottom = true
-                        scrollToBottom(proxy: proxy)
-                    }
-                }
-                .onChange(of: viewModel.isAgentTyping)  { _, _ in
-                    scrollToBottom(proxy: proxy)
-                }
-                .onAppear {
-                    scrollToBottom(proxy: proxy, shouldAnimate: false)
-                }
+                messagesScrollView
+                    .setupScrollBehavior(
+                        proxy: proxy,
+                        viewModel: viewModel,
+                        keyboard: keyboard,
+                        bottomViewYOrigin: $bottomViewYOrigin,
+                        chatViewHeight: $chatViewHeight,
+                        scrollWorkItem: $scrollWorkItem
+                    )
                 
-                if showFastScrollToBottom {
-                    ZStack(alignment: .center) {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(.gray)
-                            .frame(width: 24, height: 24)
-                        Image(systemName: "chevron.down.2")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.white)
-                    }
-                    .padding(.bottom, 12)
-                    .padding(.trailing, 12)
-                    .onTapGesture {
-                        viewModel.scrollToBottom = true
-                        scrollToBottom(proxy: proxy)
+                if shouldShowFastScrollButton {
+                    fastScrollButton {
+                        scrollToBottomWithFlag(proxy: proxy)
                     }
                 }
             }
         }
     }
     
-    private func scrollToBottom(proxy: ScrollViewProxy, shouldAnimate: Bool = true) {
-        print("LOGS:: \(#function)")
+    // MARK: - Computed Properties
+    
+    private var isAtBottom: Bool {
+        let difference = bottomViewYOrigin - chatViewHeight
+        return abs(difference) <= 40
+    }
+    
+    private var shouldShowFastScrollButton: Bool {
+        keyboard.height + chatViewHeight + 100.0 < bottomViewYOrigin
+    }
+    
+    // MARK: - View Components
+    
+    private var messagesScrollView: some View {
+        ScrollView {
+            VStack(spacing: 8) {
+                loadMoreButton
+                messagesList
+                typingIndicator
+                bottomAnchor
+            }
+            .padding(.vertical)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: hideKeyboard)
+    }
+    
+    @ViewBuilder
+    private var loadMoreButton: some View {
+        if viewModel.hasMoreMessages {
+            Button(action: viewModel.loadMoreMessages) {
+                if viewModel.isLoadingMore {
+                    ProgressView()
+                        .padding()
+                } else {
+                    Text("Load More")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                        .padding()
+                }
+            }
+        }
+    }
+    
+    private var messagesList: some View {
+        ForEach(Array(viewModel.displayedMessages.enumerated()), id: \.element.id) { index, message in
+            MessageBubbleView(
+                showMessageTail: viewModel.showMessageTail(for: index),
+                showTime: viewModel.showTime(for: index),
+                message: message
+            ) { imagePath in
+                viewModel.selectedImageForFullScreen = imagePath
+            }
+            .id(message.id)
+        }
+    }
+    
+    @ViewBuilder
+    private var typingIndicator: some View {
+        if viewModel.isAgentTyping {
+            TypingIndicatorView()
+        }
+    }
+    
+    private var bottomAnchor: some View {
+        Color.clear
+            .frame(maxWidth: .infinity, maxHeight: 1)
+            .id("BOTTOM")
+            .background(
+                GeometryReader { geo in
+                    Color.clear.preference(
+                        key: ScrollOffsetPreferenceKey.self,
+                        value: geo.frame(in: .scrollView)
+                    )
+                }
+            )
+    }
+    
+    private func fastScrollButton(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray)
+                    .frame(width: 24, height: 24)
+                
+                Image(systemName: "chevron.down.2")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.white)
+            }
+        }
+        .padding(.bottom, 12)
+        .padding(.trailing, 12)
+    }
+    
+    // MARK: - Actions
+    
+    private func scrollToBottomWithFlag(proxy: ScrollViewProxy) {
+        viewModel.scrollToBottom = true
+        performScrollToBottom(proxy: proxy)
+    }
+    
+    private func performScrollToBottom(proxy: ScrollViewProxy, shouldAnimate: Bool = true) {
         guard scrollWorkItem == nil, viewModel.scrollToBottom else { return }
-        print("LOGS:: scroll guard passed")
+        
         let task = DispatchWorkItem {
             if shouldAnimate {
                 withAnimation(.easeOut(duration: 0.25)) {
@@ -159,21 +151,127 @@ struct ChatView: View {
             scrollWorkItem = nil
             viewModel.scrollToBottom = false
         }
+        
         scrollWorkItem = task
-        DispatchQueue.main.asyncAfter(deadline: .now() + (shouldAnimate ? 0.05 : 0), execute: task)
+        let delay = shouldAnimate ? 0.05 : 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: task)
     }
     
     private func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
     }
 }
 
+// MARK: - View Extensions
+
+private extension View {
+    func setupScrollBehavior(
+        proxy: ScrollViewProxy,
+        viewModel: ChatViewModel,
+        keyboard: KeyboardObserver,
+        bottomViewYOrigin: Binding<CGFloat>,
+        chatViewHeight: Binding<CGFloat>,
+        scrollWorkItem: Binding<DispatchWorkItem?>
+    ) -> some View {
+        self
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { frame in
+                bottomViewYOrigin.wrappedValue = frame.origin.y
+            }
+            .background(
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear {
+                            chatViewHeight.wrappedValue = geometry.frame(in: .local).height
+                        }
+                        .onChange(of: geometry.frame(in: .local)) {
+                            chatViewHeight.wrappedValue = geometry.frame(in: .local).height
+                        }
+                }
+            )
+            .onChange(of: viewModel.displayedMessages.count) { _, _ in
+                performScroll(proxy: proxy, viewModel: viewModel, scrollWorkItem: scrollWorkItem)
+            }
+            .onChange(of: keyboard.height) { oldValue, newValue in
+                handleKeyboardChange(
+                    oldValue: oldValue,
+                    newValue: newValue,
+                    proxy: proxy,
+                    viewModel: viewModel,
+                    keyboard: keyboard,
+                    chatViewHeight: chatViewHeight.wrappedValue,
+                    bottomViewYOrigin: bottomViewYOrigin.wrappedValue,
+                    scrollWorkItem: scrollWorkItem
+                )
+            }
+            .onChange(of: viewModel.isAgentTyping) { _, _ in
+                performScroll(proxy: proxy, viewModel: viewModel, scrollWorkItem: scrollWorkItem)
+            }
+            .onAppear {
+                performScroll(proxy: proxy, viewModel: viewModel, scrollWorkItem: scrollWorkItem, shouldAnimate: false)
+            }
+    }
+    
+    private func performScroll(
+        proxy: ScrollViewProxy,
+        viewModel: ChatViewModel,
+        scrollWorkItem: Binding<DispatchWorkItem?>,
+        shouldAnimate: Bool = true
+    ) {
+        guard scrollWorkItem.wrappedValue == nil, viewModel.scrollToBottom else { return }
+        
+        let task = DispatchWorkItem {
+            if shouldAnimate {
+                withAnimation(.easeOut(duration: 0.25)) {
+                    proxy.scrollTo("BOTTOM", anchor: .bottom)
+                }
+            } else {
+                proxy.scrollTo("BOTTOM", anchor: .bottom)
+            }
+            scrollWorkItem.wrappedValue = nil
+            viewModel.scrollToBottom = false
+        }
+        
+        scrollWorkItem.wrappedValue = task
+        let delay = shouldAnimate ? 0.05 : 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: task)
+    }
+    
+    private func handleKeyboardChange(
+        oldValue: CGFloat,
+        newValue: CGFloat,
+        proxy: ScrollViewProxy,
+        viewModel: ChatViewModel,
+        keyboard: KeyboardObserver,
+        chatViewHeight: CGFloat,
+        bottomViewYOrigin: CGFloat,
+        scrollWorkItem: Binding<DispatchWorkItem?>
+    ) {
+        let keyboardIsOpening = newValue > oldValue
+        let shouldScroll = keyboard.height + chatViewHeight > bottomViewYOrigin
+        
+        if keyboardIsOpening && shouldScroll {
+            viewModel.scrollToBottom = true
+            performScroll(proxy: proxy, viewModel: viewModel, scrollWorkItem: scrollWorkItem)
+        }
+    }
+}
+
+// MARK: - Preference Key
+
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGRect = .zero
+    
     static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
         value = nextValue()
     }
 }
+
+// MARK: - Helper Types
 
 struct ImageWrapper: Identifiable {
     let id = UUID()
@@ -183,13 +281,5 @@ struct ImageWrapper: Identifiable {
 #Preview {
     NavigationStack {
         ChatScreenView()
-    }
-}
-
-struct ViewOffsetKey: PreferenceKey {
-    typealias Value = CGFloat
-    static var defaultValue = CGFloat.zero
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        value = nextValue()
     }
 }
