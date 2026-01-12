@@ -127,6 +127,7 @@ struct MessageBubbleView: View {
         )
         .overlay {
             fileSizeOverlay(fileSize: fileInfo.fileSize)
+                .allowsHitTesting(false)
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .contentShape(RoundedRectangle(cornerRadius: 12))

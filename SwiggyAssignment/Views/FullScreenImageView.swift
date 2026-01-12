@@ -16,16 +16,16 @@ struct FullScreenImageView: View {
     var body: some View {
         ZStack(alignment: .center) {
             Color.black.ignoresSafeArea()
+            SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil, imageScaling: .fit)
+                .scaleEffect(scale)
+                .gesture(
+                    buildMagnificationGesture()
+                )
+                .onTapGesture(count: 2) {
+                    onDoubleTapGesture()
+                }
             ZStack(alignment: .topTrailing) {
-                SwiggyChatImageView(originalPath: imagePath, thumbnailPath: nil, imageScaling: .fit)
-                    .scaleEffect(scale)
-                    .gesture(
-                        buildMagnificationGesture()
-                    )
-                    .onTapGesture(count: 2) {
-                        onDoubleTapGesture()
-                    }
-                
+                Color.clear
                 Button(action: { dismiss() }) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.title)
