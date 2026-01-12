@@ -1,4 +1,4 @@
-# Swiggy Chat App - iOS Assignment
+<img width="1179" height="2556" alt="IMG_0517" src="https://github.com/user-attachments/assets/df995015-8a3e-4233-b6fe-453f6bd6ef54" /><img width="1179" height="2556" alt="IMG_0511" src="https://github.com/user-attachments/assets/cf07d8cc-a835-45e3-a6c7-96954b8a4d65" /># Swiggy Chat App - iOS Assignment
 A fully-featured chat interface built with SwiftUI for iOS 17+, demonstrating modern iOS development practices with MVVM architecture, SwiftData persistence, and smooth animations.
 
 ## 📱 Features Implemented
@@ -215,13 +215,26 @@ Utilities/
 4. Update UI on main thread via completion handler
 
 ## 📸 Screenshots
+![Screenshot 2026-01-12 at 2 37 40 pm](https://github.com/user-attachments/assets/4d977c38-5d91-4ca5-b780-b6b979aab661)
 
-<img width="295" height="639" alt="IMG_0504" src="https://github.com/user-attachments/assets/a5010408-a8e5-4618-af13-d84ea0caecd9" />
-<img width="295" height="639" alt="IMG_0505" src="https://github.com/user-attachments/assets/824e7cb6-aa5d-471e-87a6-0f51da7d8118" />
-<img width="295" height="639" alt="IMG_0506" src="https://github.com/user-attachments/assets/8d6b2597-5266-47cb-8504-ae84cf943f27" />
-<img width="295" height="639" alt="IMG_0507" src="https://github.com/user-attachments/assets/c1167913-e788-4374-b59b-8907a0a1c34f" />
-<img width="295" height="639" alt="IMG_0509" src="https://github.com/user-attachments/assets/fbbee38d-202a-4760-a515-1e7800908d9e" />
-<img width="295" height="639" alt="IMG_0510" src="https://github.com/user-attachments/assets/cae7e0fe-c3bd-4a5d-a19f-83ca8336607b" />
+<img width="295" height="639" alt="IMG_0513" src="https://github.com/user-attachments/assets/fe784709-2eb2-4e8b-91cd-c6245fb0247e" />
+
+<img width="295" height="639" alt="IMG_0516" src="https://github.com/user-attachments/assets/7ccf4dfb-188a-4829-a762-844f0b9f2caf" />
+
+<img width="295" height="639" alt="IMG_0517" src="https://github.com/user-attachments/assets/0f639151-28b6-44ba-af73-a97f88ade348" />
+
+<img width="295" height="639" alt="IMG_0519" src="https://github.com/user-attachments/assets/9d02ad87-d0a5-4a1b-8ade-451961ee9666" />
+
+<img width="295" height="639" alt="IMG_0520" src="https://github.com/user-attachments/assets/d43af7a5-cc8f-4d1e-8acd-8b4ce87bf411" />
+
+
+https://github.com/user-attachments/assets/8fcf9602-9fcf-496f-91f5-b696b4a89e96
+
+
+https://github.com/user-attachments/assets/2ed7b4a4-b603-48d4-97bc-ec31514db4e3
+
+
+https://github.com/user-attachments/assets/2f715e9d-d319-41c5-8dcf-003b11226825
 
 ## 🎯 Testing Notes
 
